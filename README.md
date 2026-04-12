@@ -1,20 +1,12 @@
-# MNIST Neural Network Practice
-
-<!---
-
 # MNIST Digit Classification with Neural Networks
+本リポジトリは、手書き数字データセット（MNIST）を用いた多層パーセプトロン（MLP）による多クラス分類モデルの実装です。
 
-## 概要
-
-本リポジトリでは、手書き数字データセット（MNIST）を用いて、多層パーセプトロン（MLP）による分類モデルを実装しています。
-
-
----
+[Chainer Tutrial](https://tutorials.chainer.org/ja/13_Basics_of_Neural_Networks.html) を参考にしています。
 
 ## 問題設定
 
 入力画像をベクトルとして扱い、
-次のような関数を学習します：
+次のような関数を学習する：
 
 $$
 f: \mathbb{R}^{784} \to {0,1,2,\dots,9}
@@ -22,10 +14,8 @@ $$
 
 ここで、
 
-* 画像サイズ： $28 \times 28 = 784$ pixel
+* 入力画像のpixelサイズ： $28 \times 28 = 784$ pixel
 * 出力：数字クラス（0〜9）
-
----
 
 ## モデル（関数の構造）
 
@@ -51,20 +41,20 @@ $$
 \hat{\mathbf{y}} = \mathrm{softmax}(\mathbf{z})
 $$
 
----
-
 ## 各層の意味
 
-### 1. 線形変換（重回帰と同じ）
+### 1. 線形変換
 
 $$
 W \mathbf{x} + \mathbf{b}
 $$
 
 これは重回帰モデル：
+
 $$
 y = X\beta
 $$
+
 の非線形拡張です。
 
 ---
