@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 """
 MNIST classifier with PyTorch
 
@@ -11,11 +8,6 @@ Features:
 - Saves the trained model
 - Can predict some test samples after training
 
-Requirements:
-    pip install torch torchvision
-
-Run:
-    python mnist_torch.py
 """
 
 from __future__ import annotations

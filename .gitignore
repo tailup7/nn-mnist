@@ -2,3 +2,5 @@ mnist_data/
 check.py
 test.py
 *.pth
+mnist_numpy.py
+*.svg
