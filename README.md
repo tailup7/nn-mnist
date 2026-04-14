@@ -15,47 +15,46 @@ $$
 ここで、
 
 * 入力画像のpixelサイズ： $M = 28 \times 28 = 784$ pixel
-* 出力：数字クラス（0〜9）
-
-すなわち、入力変数を $\mathbf{x} \in \mathbb{R}^{784}$ として、
-
-線形変換の結果として、中間層で得られる出力値 $\mathbf{u}$ は
-
-$$
-\mathbf{u} = \mathrm{W}_1 \mathbf{x} + \mathbf{b}_1
-$$
-
-ここで、入力層 → 中間層の線形変換における重み行列 $\mathrm{W}_1$ のサイズは、中間層のノードの数を $n$ とすると
-$n \times M$ である。(今回は $n=64$, $M=784$ ) また、
-$\mathbf{b}_1 \in \mathbb{R}^{64}$ はバイアスベクトルである。
+* 出力：数字クラス（0〜9）($K=10$)
+* サンプルサイズ (入力画像のデータ数) : $N$
 
 各pixel ($\mathbf{x}$の各成分) は0~255の整数値を取る (0:黒、255: 白)。ただしコード内では正規化して扱う。
 
-重み行列
-
 ## モデル（関数の構造）
 
-本コードでは、次のような関数合成を行っています：
+本コードでは、次のような関数合成を行っている：
 
 $$
 \mathbf{x} \in \mathbb{R}^{784}
 $$
 
 $$
-\mathbf{h}_1 = \sigma(W_1 \mathbf{x} + \mathbf{b}_1)
+\mathbf{u}_1 = \sigma(\mathrm{W}_1 \mathbf{x} + \mathbf{b}_1)
 $$
 
 $$
-\mathbf{h}_2 = \sigma(W_2 \mathbf{h}_1 + \mathbf{b}_2)
+\mathbf{u}_2 = \sigma(\mathrm{W}_2 \mathbf{u}_1 + \mathbf{b}_2)
 $$
 
 $$
-\mathbf{z} = W_3 \mathbf{h}_2 + \mathbf{b}_3
+\mathbf{y} = \mathrm{W}_3 \mathbf{u}_2 + \mathbf{b}_3
 $$
 
 $$
-\hat{\mathbf{y}} = \mathrm{softmax}(\mathbf{z})
+\hat{\mathbf{y}} = \mathrm{softmax}(\mathbf{y})
 $$
+
+中間層は2層で、 784 → 128 → 64 → 10
+
+線形変換の結果として、1層目の中間層で得られる出力値 $\mathbf{u}_1$ は
+
+$$
+\mathbf{u}_1 = \mathrm{W}_1 \mathbf{x} + \mathbf{b}_1
+$$
+
+ここで、入力層 → 中間層1 の線形変換における重み行列 $\mathrm{W}_1$ のサイズは、中間層1 のノードの数を $n_1$ とすると
+$n_1 \times M$ である。(今回は $n_1=128$, $M=784$ ) また、
+$\mathbf{b}_1 \in \mathbb{R}^{128}$ はバイアスベクトルである。
 
 ## 各層の意味
 
@@ -99,18 +98,21 @@ $$
 
 ## 損失関数（目的関数）
 
-分類問題なので、次の関数を最小化します：
+分類問題なので、目的関数(objective function)として次の交差エントロピー(cross entropy) を用いる
 
 $$
-L = - \sum_{i=1}^{10} y_i \log \hat{y}_i
+L = - \sum_{k=1}^{10} y_k \log \hat{y}_k
 $$
 
-これは：
+ここで、 $y_k$ は正解ラベル、 $\hat{y}_k$ はクラス $k$ に対する予測確率を表す。
 
+これを最小にする重み行列 (今回は $\mathrm{W}_1$と $\mathrm{W}_2$と $\mathrm{W}_3$の3つ) およびバイアスベクトル (今回は $\mathbf{b}_1$と $\mathbf{b}_2$と $\mathbf{b}_3$の3つ) を求める。
+
+<!--
 * クロスエントロピー
 * ロジスティック回帰の多クラス版
+-->
 
----
 
 ## 学習（最適化）
 
@@ -125,6 +127,8 @@ $$
 * $\eta$：学習率
 * $\nabla_\theta L$：勾配
 
+目的関数 
+
 ---
 
 ### 実装対応
@@ -133,24 +137,6 @@ $$
 
 * 勾配計算：自動微分
 * 更新：Adam法
-
----
-
-## データ処理
-
-画像は次のように変換されます：
-
-$$
-[0,255] \rightarrow [0,1]
-$$
-
-さらに：
-
-$$
-28 \times 28 \rightarrow 784
-$$
-
----
 
 ## 精度の定義
 
