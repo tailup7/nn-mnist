@@ -54,7 +54,11 @@ $$
 
 ここで、入力層 → 中間層1 の線形変換における重み行列 $\mathrm{W}_1$ のサイズは、中間層1 のノードの数を $n_1$ とすると
 $n_1 \times M$ である。(今回は $n_1=128$, $M=784$ ) また、
-$\mathbf{b}_1 \in \mathbb{R}^{128}$ はバイアスベクトルである。
+$\mathbf{b}_1 \in \mathbb{R}^{128}$ はバイアスベクトルである。 $\mathrm{softmax}$ 関数は、出力値を確率に変換するための正規化関数であり、ベクトル $\mathbf{y} = (y_1, y_2, ... , y_n)$ に対して以下の式で定義される。
+
+$$
+\hat{y_i} = \mathrm{softmax}(y_i) = \frac{e^y_i}{\sum_{j=1}^{n} e^y_j}
+$$
 
 ## 各層の意味
 
@@ -88,7 +92,7 @@ $$
 ### 3. 出力（確率化）
 
 $$
-\mathrm{softmax}(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{10} e^{z_j}}
+\hat{y_i} = \mathrm{softmax}(y_i) = \frac{e^y_i}{\sum_{j=1}^{n} e^y_j}
 $$
 
 <!---
