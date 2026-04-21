@@ -55,7 +55,6 @@ def load_mnist_images(path: str) -> np.ndarray:
     images = images.reshape(num_images, image_size) / 255.0
     return images
 
-
 def load_mnist_labels(path: str) -> np.ndarray:
     """
     Return:
@@ -94,9 +93,9 @@ def softmax(logits: np.ndarray) -> np.ndarray:
 
 # objective function L
 # epsilon is introduced to prevent the argument of the log from becoming zero
-def cross_entropy(pred: np.ndarray, target: np.ndarray) -> float:
+def cross_entropy(pred: np.ndarray, t: np.ndarray) -> float:
     eps = 1e-12
-    return float(-np.sum(target * np.log(pred + eps)))
+    return float(-np.sum(t * np.log(pred + eps)))
 
 
 # ============================================================
@@ -148,51 +147,51 @@ class SimpleMLP2Hidden:
         x  : shape (784,)
 
         Returns:
-            z1 : shape (128,)
-            a1 : shape (128,)
-            z2 : shape (64,)
-            a2 : shape (64,)
-            z3 : shape (10,)
-            y  : shape (10,)
+            u1 : shape (128,)
+            h1 : shape (128,)
+            u2 : shape (64,)
+            h2 : shape (64,)
+            y : shape (10,)
+            y_hat  : shape (10,)
         """
 
         # hidden layer 1
-        z1 = x @ self.W1 + self.b1
-        a1 = sigmoid(z1)
+        u1 = x @ self.W1 + self.b1
+        h1 = sigmoid(u1)
 
         # hidden layer 2
-        z2 = a1 @ self.W2 + self.b2
-        a2 = sigmoid(z2)
+        u2 = h1 @ self.W2 + self.b2
+        h2 = sigmoid(u2)
 
         # output layer
-        z3 = a2 @ self.W3 + self.b3
-        y = softmax(z3)
+        y = h2 @ self.W3 + self.b3
+        y_hat = softmax(y)
 
-        return z1, a1, z2, a2, z3, y
+        return u1, h1, u2, h2, y, y_hat
 
     def predict_proba(self, x: np.ndarray) -> np.ndarray:
-        _, _, _, _, _, y = self.forward(x)
-        return y
+        _, _, _, _, _, y_hat = self.forward(x)
+        return y_hat
 
     def predict(self, x: np.ndarray) -> int:
-        y = self.predict_proba(x)
-        return int(np.argmax(y))
+        y_hat = self.predict_proba(x)
+        return int(np.argmax(y_hat))
 
     def train_one(self, x: np.ndarray, label: int, learning_rate: float) -> float:
         """
         Train on one sample using SGD.
         """
-        target = one_hot(label, self.b3.shape[0])
+        t = one_hot(label, self.b3.shape[0])
 
         # ----------------------------
         # forward
         # ----------------------------
-        z1, a1, z2, a2, z3, y = self.forward(x)
+        u1, h1, u2, h2, y, y_hat = self.forward(x)
 
         # ----------------------------
         # loss
         # ----------------------------
-        loss = cross_entropy(y, target)
+        loss = cross_entropy(y_hat, t)
 
         # ----------------------------
         # backward
@@ -200,34 +199,34 @@ class SimpleMLP2Hidden:
 
         # output layer
         # softmax + cross entropy:
-        # dL/dz3 = y - target
-        dz3 = y - target                        # shape (10,)
-        dW3 = np.outer(a2, dz3)                 # shape (64, 10)
-        db3 = dz3.copy()                        # shape (10,)
+        # dL/dy = y_hat - t
+        dLdy  = y_hat - t                        # shape (10,)
+        dLdW3 = np.outer(h2, dLdy)               # shape (64, 10)
+        dLdb3 = dLdy.copy()                      # shape (10,)
 
         # hidden layer 2
-        da2 = self.W3 @ dz3                     # shape (64,)
-        dz2 = da2 * a2 * (1.0 - a2)             # shape (64,)
-        dW2 = np.outer(a1, dz2)                 # shape (128, 64)
-        db2 = dz2.copy()                        # shape (64,)
+        dLdh2 = self.W3 @ dLdy                   # shape (64,)
+        dLdu2 = dLdh2 * h2 * (1.0 - h2)          # shape (64,)
+        dLdW2 = np.outer(h1, dLdu2)              # shape (128, 64)
+        dLdb2 = dLdu2.copy()                     # shape (64,)
 
         # hidden layer 1
-        da1 = self.W2 @ dz2                     # shape (128,)
-        dz1 = da1 * a1 * (1.0 - a1)             # shape (128,)
-        dW1 = np.outer(x, dz1)                  # shape (784, 128)
-        db1 = dz1.copy()                        # shape (128,)
+        dLdh1 = self.W2 @ dLdu2                  # shape (128,)
+        dLdu1 = dLdh1 * h1 * (1.0 - h1)          # shape (128,)
+        dLdW1 = np.outer(x, dLdu1)               # shape (784, 128)
+        dLdb1 = dLdu1.copy()                     # shape (128,)
 
         # ----------------------------
         # SGD update
         # ----------------------------
-        self.W3 -= learning_rate * dW3
-        self.b3 -= learning_rate * db3
+        self.W3 -= learning_rate * dLdW3
+        self.b3 -= learning_rate * dLdb3
 
-        self.W2 -= learning_rate * dW2
-        self.b2 -= learning_rate * db2
+        self.W2 -= learning_rate * dLdW2
+        self.b2 -= learning_rate * dLdb2
 
-        self.W1 -= learning_rate * dW1
-        self.b1 -= learning_rate * db1
+        self.W1 -= learning_rate * dLdW1
+        self.b1 -= learning_rate * dLdb1
 
         return loss
 
@@ -265,12 +264,11 @@ def evaluate_loss(
 
     total_loss = 0.0
     for i in range(max_samples):
-        y = model.predict_proba(images[i])
-        target = one_hot(int(labels[i]), 10)
-        total_loss += cross_entropy(y, target)
+        y_hat = model.predict_proba(images[i])
+        t = one_hot(int(labels[i]), 10)
+        total_loss += cross_entropy(y_hat, t)
 
     return total_loss / max_samples
-
 
 # ============================================================
 # Training
