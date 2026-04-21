@@ -6,7 +6,7 @@
 # 問題設定
 
 入力画像をベクトルとして扱い、
-次のような関数を学習する：
+次のようなモデルを学習する：
 
 $$
 f: \mathbb{R}^{784} \to {0,1,2,\dots,9}
@@ -24,22 +24,30 @@ $$
 
 次のような関数を用いて**推論**を行う。
 
-**推論** ... 訓練が完了した関数を用いて新しいデータに対して予測を行うこと
+**推論** ... 訓練が完了したモデルを用いて新しいデータに対して予測を行うこと
 
 $$
 \mathbf{x} \in \mathbb{R}^{784}
 $$
 
 $$
-\mathbf{u}_1 = \sigma(\mathrm{W}_1 \mathbf{x} + \mathbf{b}_1)
+\mathbf{u}_1 = \mathrm{W}_1 \mathbf{x} + \mathbf{b}_1
 $$
 
 $$
-\mathbf{u}_2 = \sigma(\mathrm{W}_2 \mathbf{u}_1 + \mathbf{b}_2)
+\mathbf{h}_1 = \sigma(\mathbf{u_1})
 $$
 
 $$
-\mathbf{y} = \mathrm{W}_3 \mathbf{u}_2 + \mathbf{b}_3
+\mathbf{u}_2 = \mathrm{W}_2 \mathbf{h}_1 + \mathbf{b}_2
+$$
+
+$$
+\mathbf{h}_2 = \sigma(\mathbf{u_2})
+$$
+
+$$
+\mathbf{y} = \mathrm{W}_3 \mathbf{h}_2 + \mathbf{b}_3
 $$
 
 $$
