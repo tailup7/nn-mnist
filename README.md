@@ -100,7 +100,7 @@ $$
 L = - \sum_{k=1}^K t_k \log \hat{y}_k
 $$
 
-ここで、 $\mathbf{t}$ は正解ラベルであり、 $t_k (k = 1,2, ..., K)$ のいずれか1つだけが1で、それ以外が0であるようなベクトル(ワンホットベクトル)である。また、 $\hat{y}_k$ はクラス $k$ に対する予測確率を表す。
+ここで、 $\mathbf{t}$ は正解ラベルであり、 $t_k (k = 1,2, ..., K)$ のいずれか1つだけが1で、それ以外が0であるようなベクトル(ワンホットベクトル)である。また、 $\hat{y}_k$ はクラス $k$ に対する予測確率を表す。 $L$の値が小さいほど、正解との誤差が小さい。
 
 これを最小にする重み行列 (今回は $\mathrm{W}_1$と $\mathrm{W}_2$と $\mathrm{W}_3$の3つ) およびバイアスベクトル (今回は $\mathbf{b}_1$と $\mathbf{b}_2$と $\mathbf{b}_3$の3つ) を求める。
 
@@ -110,12 +110,15 @@ $$
 **誤差逆伝播法 (backpropagation)** によって勾配を求め、**確率的勾配降下法 (SGD: stocastic gradient descent)** (ミニバッチ学習を用いた勾配降下法) で更新する。
 -->
 
-$L(\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3)$ を最小にする $\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3$を決定する。 $\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3$はそれぞれ独立変数なので、それぞれの変数で$L$を偏微分すればよい。
+$L(\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3)$ を最小にする $\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3$を決定する。 $\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3$はそれぞれ独立変数なので、それぞれの変数で $L$を偏微分すればよい。
+
+まず、 $\partial L / \partial W_3$について、連鎖則を用いて
 
 $$
-\del
+\dfrac{\partial L}{\partial W_3} = \dfrac{\partial L}{\partial \mathbf{y}} \dfrac{\partial \mathbf{y}}{\partial W_3}
 $$
 
+<!--
 パラメータ $\theta = {W, b}$ を更新：
 
 $$
@@ -126,6 +129,7 @@ $$
 
 * $\eta$：学習率
 * $\nabla_\theta L$：勾配
+-->
 
 ### ミニバッチ学習とは
 
