@@ -74,48 +74,6 @@ $$
 \hat{y_i} = \mathrm{softmax}(y_i) = \frac{e^{y_i}}{\sum_{k=1}^{K} e^{y_k}}
 $$
 
-<!--
-## 各層の意味
-
-### 1. 線形変換
-
-$$
-W \mathbf{x} + \mathbf{b}
-$$
-
-これは重回帰モデル：
-
-$$
-y = X\beta
-$$
-
-の非線形拡張です。
-
----
-
-### 2. 非線形変換（ReLU）
-
-$$
-\sigma(x) = \max(0, x)
-$$
-
-👉 線形モデルでは表現できない関数を扱うために必要
-
-
----
-
-### 3. 出力（確率化）
-
-$$
-\hat{y_i} = \mathrm{softmax}(y_i) = \frac{e^y_i}{\sum_{j=1}^{n} e^y_j}
-$$
-
-👉 各クラスの確率に変換
-
---->
-
-
-
 # ニューラルネットワークの訓練
 
 ### 重み行列とバイアスベクトルの初期値
@@ -146,15 +104,17 @@ $$
 
 これを最小にする重み行列 (今回は $\mathrm{W}_1$と $\mathrm{W}_2$と $\mathrm{W}_3$の3つ) およびバイアスベクトル (今回は $\mathbf{b}_1$と $\mathbf{b}_2$と $\mathbf{b}_3$の3つ) を求める。
 
-<!--
-* クロスエントロピー
-* ロジスティック回帰の多クラス版
--->
-
-
 ### パラメータの最適化
 
+<!--
 **誤差逆伝播法 (backpropagation)** によって勾配を求め、**確率的勾配降下法 (SGD: stocastic gradient descent)** (ミニバッチ学習を用いた勾配降下法) で更新する。
+-->
+
+$L(\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3)$ を最小にする $\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3$を決定する。 $\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3$はそれぞれ独立変数なので、それぞれの変数で$L$を偏微分すればよい。
+
+$$
+\del
+$$
 
 パラメータ $\theta = {W, b}$ を更新：
 
