@@ -3,6 +3,8 @@
 
 [Chainer Tutrial](https://tutorials.chainer.org/ja/13_Basics_of_Neural_Networks.html) を参考にしています。
 
+※ **本記事では、 $t_i y_i$ のように同じ下付き添え字が1つの項に複数含まれる場合がありますが、総和規約ではありません。和を取るときは明示的に $\sum$で書いています。**
+
 # 問題設定
 
 入力画像をベクトルとして扱い、
@@ -104,19 +106,86 @@ $$
 
 これを最小にする重み行列 (今回は $\mathrm{W}_1$と $\mathrm{W}_2$と $\mathrm{W}_3$の3つ) およびバイアスベクトル (今回は $\mathbf{b}_1$と $\mathbf{b}_2$と $\mathbf{b}_3$の3つ) を求める。
 
-### パラメータの最適化
+### 重み行列とバイアスベクトルの最適化
 
 <!--
 **誤差逆伝播法 (backpropagation)** によって勾配を求め、**確率的勾配降下法 (SGD: stocastic gradient descent)** (ミニバッチ学習を用いた勾配降下法) で更新する。
 -->
 
-$L(\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3)$ を最小にする $\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3$を決定する。 $\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3$はそれぞれ独立変数なので、それぞれの変数で $L$を偏微分すればよい。
+$L(\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3)$ を最小にする $\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3$を決定する。 $\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf{b}_3$はそれぞれ独立変数なので、それぞれの変数で $L$を偏微分し、 $L$が小さくなる方向へ変数を更新すればよい。
 
-まず、 $\partial L / \partial W_3$について、連鎖則を用いて
+
+(したがって、各変数の最終的な収束値に対して $L$がとるのは局所最小であり、必ずしも大域最小ではない。重み行列やバイアスベクトルの初期値次第で、最終的に収束する(訓練後の)重み行列やバイアスベクトルの値は異なる可能性がある。)
+
+<!--
+ニューラルネットワークにおけるパラメータの初期値依存性は面白いテーマかもしれない
+-->
+ 
+まず、 $\partial L / \partial \mathrm{W_3}$について、連鎖則を用いて
 
 $$
-\dfrac{\partial L}{\partial W_3} = \dfrac{\partial L}{\partial \mathbf{y}} \dfrac{\partial \mathbf{y}}{\partial W_3}
+\dfrac{\partial L}{\partial \mathrm{W_3}} = \dfrac{\partial L}{\partial \hat{\mathbf{y}}} \dfrac{\partial \hat{\mathbf{y}}}{\partial \mathbf{y}} \dfrac{\partial \mathbf{y}}{\partial \mathrm{W_3}}
 $$
+
+
+
+$\partial L / \partial \hat{y}$ は $K$ 次元のベクトルであり、成分 $i$ について、
+
+$$
+\dfrac{\partial L}{\partial \hat{y}_i} = \dfrac{\partial}{\partial \hat{y}_i} \left\(- \sum_{k=1}^{K} t_k \log \hat{y}_k \right\) = - \dfrac{t_i}{\hat{y}_i}
+$$
+
+と表せる。
+
+また $\partial \hat{y} / \partial y$ はサイズが $K \times K$ のヤコビ行列であり、その $(i,j)$ 成分について
+
+$$
+\dfrac{\partial \hat{y}_i}{\partial y_j} = \dfrac{\partial}{\partial y_j} \frac{e^{y_i}}{\sum_{k=1}^{K} e^{y_k}}
+$$
+
+ここで、 $i=j$ なら
+
+$$
+\dfrac{\partial}{\partial y_j} \frac{e^{y_i}}{\sum_{k=1}^{K} e^{y_k}} = \dfrac{\partial}{\partial y_i} \frac{e^{y_i}}{\sum_{k=1}^{K} e^{y_k}} = \dfrac{e^{y_i} \sum_{k=1}^{K} e^{y_k} - \left( e^{y_i}\right)^2}{\left( \sum_{k=1}^{K} e^{y_k}\right)^2} = \hat{y}_i \left( 1-\hat{y}_i\right)
+$$
+
+$i \neq j$ なら
+
+$$
+\dfrac{\partial}{\partial y_j} \frac{e^{y_i}}{\sum_{k=1}^{K} e^{y_k}} = \dfrac{-e^{y_i} e^{y_j}}{\left( \sum_{k=1}^{K} e^{y_k}\right)^2} = - \hat{y}_i \hat{y}_j
+$$
+
+であり、これらをクロネッカーのデルタを用いてまとめて表せば、
+
+$$
+\dfrac{\partial \hat{y}_i}{\partial y_j} = \hat{y}_i \left( \delta_{ij} - \hat{y}_j\right)
+$$
+
+となる。
+
+$$
+\dfrac{\partial L}{\partial \mathbf{y}} = \dfrac{\partial L}{\partial \hat{\mathbf{y}}} \dfrac{\partial \hat{\mathbf{y}}}{\partial \mathbf{y}}
+$$
+
+は、 $K$ 次元のベクトル ( $K$ 次元のベクトル × $K\times K$行列) であり、その $i$ 成分について
+
+$$
+\sum_{k=1}^{K} \left( - \dfrac{t_k}{\hat{y}_k}   \hat{y}_k \left( \delta_{ki} - \hat{y}_i \right)\right) = \sum_{k=1}^{K} \left( - t_k \left( \delta_{ki} -\hat{y}_i \right) \right)
+$$
+
+と表せる。ここで、 $\mathbf{t}$ はワンホットベクトルなので、正解が $j$ だとして、上式 ( $\partial L/\partial \mathbf{y}$ の $i$ 成分) は
+
+$$
+\hat{y}_i - \delta_{ji}
+$$
+
+と表せる。したがって、 $\partial L / \partial \mathbf{y}$は、ワンホットベクトル $\mathbf{t}$ を用いて
+
+$$
+\dfrac{\partial L}{\partial \mathbf{y}} = \dfrac{\partial L}{\partial \mathbf{\hat{y}}} \dfrac{\partial \mathbf{\hat{y}}}{\partial \mathbf{y}} = \hat{\mathbf{y}} - \mathbf{t}
+$$
+
+と表せる。
 
 <!--
 パラメータ $\theta = {W, b}$ を更新：
@@ -131,6 +200,7 @@ $$
 * $\nabla_\theta L$：勾配
 -->
 
+<!--
 ### ミニバッチ学習とは
 
 エポック ( `epochs` )
