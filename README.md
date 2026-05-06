@@ -129,7 +129,7 @@ $$
 
 
 
-$\partial L / \partial \hat{y}$ は $K$ 次元のベクトルであり、成分 $i$ について、
+$\partial L / \partial \hat{y}$ は $K$ 次元の行ベクトルであり、成分 $i$ について、
 
 $$
 \dfrac{\partial L}{\partial \hat{y}_i} = \dfrac{\partial}{\partial \hat{y}_i} \left\(- \sum_{k=1}^{K} t_k \log \hat{y}_k \right\) = - \dfrac{t_i}{\hat{y}_i}
@@ -167,7 +167,7 @@ $$
 \dfrac{\partial L}{\partial \mathbf{y}} = \dfrac{\partial L}{\partial \hat{\mathbf{y}}} \dfrac{\partial \hat{\mathbf{y}}}{\partial \mathbf{y}}
 $$
 
-は、 $K$ 次元のベクトル ( $K$ 次元のベクトル × $K\times K$行列) であり、その $i$ 成分について
+は、 $K$ 次元のベクトル ( $K$ 次元の行ベクトル × $K\times K$行列) であり、その $i$ 成分について
 
 $$
 \sum_{k=1}^{K} \left( - \dfrac{t_k}{\hat{y}_k}   \hat{y}_k \left( \delta_{ki} - \hat{y}_i \right)\right) = \sum_{k=1}^{K} \left( - t_k \left( \delta_{ki} -\hat{y}_i \right) \right)
