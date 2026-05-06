@@ -124,7 +124,7 @@ $L(\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf
 まず、 $\partial L / \partial \mathrm{W_3}$について、連鎖則を用いて
 
 $$
-\dfrac{\partial L}{\partial \mathrm{W_3}} = \dfrac{\partial L}{\partial \hat{\mathbf{y}}} \dfrac{\partial \hat{\mathbf{y}}}{\partial \mathbf{y}} \dfrac{\partial \mathbf{y}}{\partial \mathrm{W_3}}
+\dfrac{\partial L}{\partial \mathrm{W_3}} = \dfrac{\partial L}{\partial y} \dfrac{\partial y}{\partial \mathrm{W_3}} = \dfrac{\partial L}{\partial \hat{\mathbf{y}}} \dfrac{\partial \hat{\mathbf{y}}}{\partial \mathbf{y}} \dfrac{\partial \mathbf{y}}{\partial \mathrm{W_3}}
 $$
 
 
