@@ -187,6 +187,30 @@ $$
 
 と表せる。
 
+また、 $\dfrac{\partial y}{\partial W_3}$ は $\left( K × K × n_2 \right)$のテンソルであり、その $iab$ 成分について、
+
+$$
+\dfrac{\partial y_i}{\partial \left( W_3 \right)_{ab}} = \dfrac{\partial }{\partial \left( W_3 \right)_{ab}} \left( \sum_{j} \left( W_3 \right)_{ij} \left( h_2 \right)_j + \left( b_3 \right) _{i} \right) = \left( h_2 \right)_{b} \delta _{ia}
+$$
+
+と表せる。
+
+$\dfrac{\partial L}{\partial \mathrm{W_3}}$ は $K \times n_2$行列であり、その $(a,b)$成分について、
+
+$$
+\left( \dfrac{\partial L}{\partial \mathrm{W_3}} \right) _{ab} = \sum_{i} \dfrac{\partial L}{\partial y_i} \dfrac{\partial y_i}{\partial \left( W_3 \right)_{ab}} = \sum_{i} \dfrac{\partial L}{\partial y_i} \left( h_2 \right)_{b} \delta _{ia} = \dfrac{\partial L}{\partial y_a} \left( h_2 \right)_b = \left( \hat{y}_a - \delta_{ja} \right) \left( h_2 \right)_b
+$$
+
+と表せる。ここで、 $j$ は正解である。
+
+また上式の1つ目の等号について、 $L=L \left( y_1, y_2, ..., y_K \right)$であり、また各 $y_i$ について、 $y_i = y_i \left( W_3 \right)$ であるため、多変数の連鎖則として $\sum_{i} \dfrac{\partial L}{\partial y_i} \dfrac{\partial y_i}{\partial \left( W_3 \right)_{ab}}$ のように総和を取る。
+
+上式の3つ目の等号から、 $\dfrac{\partial L}{\partial W_3}$ は外積(outer product)を用いて、以下のように表せる。
+
+$$
+\dfrac{\partial L}{\partial W_3} = \dfrac{\partial L}{\partial y} \otimes h_2
+$$
+
 <!--
 パラメータ $\theta = {W, b}$ を更新：
 
