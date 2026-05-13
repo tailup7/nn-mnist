@@ -120,6 +120,8 @@ $L(\mathrm{W}_1, \mathrm{W}_2, \mathrm{W}_3, \mathbf{b}_1, \mathbf{b}_2, \mathbf
 <!--
 ニューラルネットワークにおけるパラメータの初期値依存性は面白いテーマかもしれない
 -->
+
+#### 出力層
  
 まず、 $\partial L / \partial \mathrm{W_3}$について、連鎖則を用いて
 
@@ -217,19 +219,48 @@ $$
 \dfrac{\partial L}{\partial \left( b_3 \right)_{a} } = \sum_{i} \dfrac{\partial L}{\partial y_{i}} \dfrac{\partial y_{i}}{\partial \left( b_3 \right)_{a}}
 $$
 
-ここで、 
+ここで、
 
 $$
-\dfrac{\partial y_{i}}{\partial \left( b_3 \right)_{a}} = \delta_{ia}
+\dfrac{\partial y_{i}}{\partial \left(b_3\right)_{a}}=\delta_{ia}
 $$
 
-であるから、
+であるから、上式は、
 
 $$
 \dfrac{\partial L}{\partial \left( b_3 \right)_{a} } = \sum_{i} \dfrac{\partial L}{\partial y_{i}} \delta_{ia} = \dfrac{\partial L}{\partial y_a}
 $$
 
 と表せる。すなわち、 $\dfrac{\partial L}{\partial b_3} = \dfrac{\partial L}{\partial y}$ である。
+
+#### 中間層2
+
+まず、 $\dfrac{\partial L}{\partial h_2}$ について、その $a$成分は、
+
+$$
+\dfrac{\partial L}{\partial \left( h_2 \right)_{a}} = \sum_{i} \dfrac{\partial L}{\partial y_i} \dfrac{\partial y_i}{\partial \left( h_2 \right)_a}
+$$
+
+であり、 $y_i = \sum_{j}\left(W_3\right)_{ij}\left(h_2\right)_j+\left(b_3\right)_i$ であるから、 
+
+$$
+\dfrac{\partial y_i}{\partial \left(h_2\right)_a} = \left(W_3\right)_{ia}
+$$ 
+
+であり、これを上式に代入して
+
+$$
+\dfrac{\partial L}{\partial \left( h_2 \right)_{a}} = \sum_{i} \dfrac{\partial L}{\partial y_i} \left( W_3 \right)_{ia}
+$$
+
+となり、したがって $\dfrac{\partial L}{\partial h_2}$ は行列積の形で
+
+$$
+\dfrac{\partial L}{\partial h_2} = \dfrac{\partial L}{\partial y} W_3
+$$
+
+と表せる。
+
 <!--
 パラメータ $\theta = {W, b}$ を更新：
 
