@@ -214,10 +214,16 @@ $$
 次に、 $\dfrac{\partial L}{\partial b_3}$ について、 $a$ 成分について考えると
 
 $$
-\dfrac{\partial L}{\partial \left( b_3 \right)_{a} } = \sum_{i} \dfrac{\partial L}{\partial y_{i}} \dfrac{\partial y_{i}}{\left( b_3 \right)_{a}}
+\dfrac{\partial L}{\partial \left( b_3 \right)_{a} } = \sum_{i} \dfrac{\partial L}{\partial y_{i}} \dfrac{\partial y_{i}}{\partial \left( b_3 \right)_{a}}
 $$
 
-ここで、 $\dfrac{\partial y_{i}}{\left( b_3 \right)_{a}} = \delta_{ia}$ であるから、
+ここで、 
+
+$$
+\dfrac{\partial y_{i}}{\partial \left( b_3 \right)_{a}} = \delta_{ia}
+$$
+
+であるから、
 
 $$
 \dfrac{\partial L}{\partial \left( b_3 \right)_{a} } = \sum_{i} \dfrac{\partial L}{\partial y_{i}} \delta_{ia} = \dfrac{\partial L}{\partial y_a}
