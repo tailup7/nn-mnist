@@ -207,13 +207,13 @@ $$
 
 また上式の1つ目の等号について、 $L=L \left( y_1, y_2, ..., y_K \right)$であり、また各 $y_i$ について、 $y_i = y_i \left( W_3 \right)$ であるため、多変数の連鎖則として $\sum_{i} \dfrac{\partial L}{\partial y_i} \dfrac{\partial y_i}{\partial \left( W_3 \right)_{ab}}$ のように総和を取る。
 
-上式の3つ目の等号から、 $\dfrac{\partial L}{\partial W_3}$ は外積(outer product)を用いて、以下のように表せる。
+上式の3つ目の等号から、 $\dfrac{\partial L}{\partial W_3}$ は、以下のように表せる。
 
 $$
-\dfrac{\partial L}{\partial W_3} = \dfrac{\partial L}{\partial y} \otimes h_2
+\dfrac{\partial L}{\partial W_3} = \dfrac{\partial L}{\partial y} h_2 ^{\mathrm{T}}
 $$
 
-次に、 $\dfrac{\partial L}{\partial b_3}$ について、 $a$ 成分について考えると
+ここで、 $\dfrac{\partial L}{\partial y}$ は $(K×1)$のベクトル、 $h_2$ は $(n_2 × 1)$ のベクトルである。次に、 $\dfrac{\partial L}{\partial b_3}$ について、 $a$ 成分について考えると
 
 $$
 \dfrac{\partial L}{\partial \left( b_3 \right)_{a} } = \sum_{i} \dfrac{\partial L}{\partial y_{i}} \dfrac{\partial y_{i}}{\partial \left( b_3 \right)_{a}}
